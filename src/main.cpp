@@ -67,7 +67,7 @@ void measureTime( const std::string &actionName, Functor F ){
 
 template <typename Functor>
 void processRangeNeighbors(int i, Functor f){
-    for (int j : tree.range_neighbors(i, NSize)){
+    for (int j : tree.rangeNeighbors(i, NSize)){
         f(j);
     }
 }
@@ -82,7 +82,7 @@ void processPointCloud(Functor f){
 
         for( int mm = 0; mm < mlsIter; ++mm) {
             FitT fit;
-            fit.setWeightFunc({pos, NSize});
+            fit.setNeighborFilter({pos, NSize});
             fit.init();
 
             processRangeNeighbors(i, [&fit](int j){
@@ -296,21 +296,24 @@ int main(int argc, char *argv[])
             FitPlane,
             Ponca::DiffType::FitSpaceDer,
             Ponca::CovariancePlaneDer,
-            Ponca::CurvatureEstimatorBase, Ponca::NormalDerivativesCurvatureEstimator>;
+            Ponca::CurvatureEstimatorDer, Ponca::NormalDerivativeWeingartenEstimator, 
+            Ponca::WeingartenCurvatureEstimatorDer>;
 
     using FitAPSS = Ponca::Basket<PPAdapter, SmoothWeightFunc, Ponca::OrientedSphereFit>;
     using FitAPSSDiff = Ponca::BasketDiff<
             FitAPSS,
             Ponca::DiffType::FitSpaceDer,
             Ponca::OrientedSphereDer,
-            Ponca::CurvatureEstimatorBase, Ponca::NormalDerivativesCurvatureEstimator>;
+            Ponca::CurvatureEstimatorDer, Ponca::NormalDerivativeWeingartenEstimator,
+            Ponca::WeingartenCurvatureEstimatorDer>;
 
     using FitASO = FitAPSS;
     using FitASODiff = Ponca::BasketDiff<
             FitASO,
             Ponca::DiffType::FitSpaceDer,
             Ponca::OrientedSphereDer, Ponca::MlsSphereFitDer,
-            Ponca::CurvatureEstimatorBase, Ponca::NormalDerivativesCurvatureEstimator>;
+            Ponca::CurvatureEstimatorDer, Ponca::NormalDerivativeWeingartenEstimator,
+            Ponca::WeingartenCurvatureEstimatorDer>;
     //////////////////////////////////////////////////////////
 
     // Load the default mesh
@@ -374,7 +377,7 @@ int main(int argc, char *argv[])
                 cloudC.row(selected_pid) = red;
 
                 // Paint the neighbors orange
-                for(const int neighbor_idx : tree.k_nearest_neighbors(selected_pid, k)) {
+                for(const int neighbor_idx : tree.kNearestNeighbors(selected_pid, k)) {
                     cloudC.row(neighbor_idx) = orange;
                 }
 
