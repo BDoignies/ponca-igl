@@ -296,24 +296,21 @@ int main(int argc, char *argv[])
             FitPlane,
             Ponca::DiffType::FitSpaceDer,
             Ponca::CovariancePlaneDer,
-            Ponca::CurvatureEstimatorDer, Ponca::NormalDerivativeWeingartenEstimator, 
-            Ponca::WeingartenCurvatureEstimatorDer>;
+            Ponca::CurvatureEstimatorBase, Ponca::NormalDerivativesCurvatureEstimator>;
 
     using FitAPSS = Ponca::Basket<PPAdapter, SmoothWeightFunc, Ponca::OrientedSphereFit>;
     using FitAPSSDiff = Ponca::BasketDiff<
             FitAPSS,
             Ponca::DiffType::FitSpaceDer,
             Ponca::OrientedSphereDer,
-            Ponca::CurvatureEstimatorDer, Ponca::NormalDerivativeWeingartenEstimator,
-            Ponca::WeingartenCurvatureEstimatorDer>;
+            Ponca::CurvatureEstimatorBase, Ponca::NormalDerivativesCurvatureEstimator>;
 
     using FitASO = FitAPSS;
     using FitASODiff = Ponca::BasketDiff<
             FitASO,
             Ponca::DiffType::FitSpaceDer,
             Ponca::OrientedSphereDer, Ponca::MlsSphereFitDer,
-            Ponca::CurvatureEstimatorDer, Ponca::NormalDerivativeWeingartenEstimator,
-            Ponca::WeingartenCurvatureEstimatorDer>;
+            Ponca::CurvatureEstimatorBase, Ponca::NormalDerivativesCurvatureEstimator>;
     //////////////////////////////////////////////////////////
 
     // Load the default mesh
